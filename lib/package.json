@@ -18,6 +18,9 @@
   "scripts": {
   },
   "dependencies": {
+    "constant-case": "^2.0.0",
+    "redux": "^4.0.1",
+    "seamless-immutable": "^7.1.4"
   },
   "peerDependencies": {
   }
