@@ -2805,8 +2805,8 @@ globals@^9.18.0:
   integrity sha512-S0nG3CLEQiY/ILxqtztTWH/3iRRdyBLw6KMDxnKMchrtbj2OFmehVh0WUCfW3DUrIgx/qFrJPICrq4Z4sTR9UQ==
 
 glow@technology-studio-forks/glow#fix/flow-version-boundaries:
-  version "1.2.3"
-  resolved "https://codeload.github.com/technology-studio-forks/glow/tar.gz/cfbbb3e8f25b6f9d6d8d6a296643220694779456"
+  version "1.2.3-txo"
+  resolved "https://codeload.github.com/technology-studio-forks/glow/tar.gz/20b1005d7356a171ef2a15e58f2b349751f01dc0"
   dependencies:
     "@babel/code-frame" "^7.0.0-beta.38"
     babel-runtime "^6.26.0"
