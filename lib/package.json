@@ -1,6 +1,6 @@
 {
   "name": "@txo/redux",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Technology Studio - Redux",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -19,8 +19,7 @@
   },
   "dependencies": {
     "constant-case": "^2.0.0",
-    "redux": "^4.0.1",
-    "seamless-immutable": "^7.1.4"
+    "redux": "^4.0.1"
   },
   "peerDependencies": {
   }
