@@ -7,7 +7,7 @@
  */
 
 import { combineReducers, type Reducer } from 'redux'
-import constantCase from 'constant-case'
+import { constantCase } from 'constant-case'
 
 import type {
   Action,
@@ -36,12 +36,12 @@ const identity = <+VALUE>(value: $ReadOnly<VALUE>) => value
 
 const wrapImmutable = <VALUE> (immutable: Immutable, previous: ?VALUE, next: VALUE): VALUE => previous && previous === next ? previous : immutable(next)
 
-const createReducer = <STATE, INNER_STATE, ACTION_BASE: Action & { attributes: * }> (
+const createReducer = <STATE, INNER_STATE, ACTION_BASE: $ReadOnly<{ ...Action, attributes: * }>> (
   initialState: INNER_STATE,
   handlerMap: HandlerMap<INNER_STATE>,
   handlerWrapper: HandlerWrapper<STATE, INNER_STATE, *>,
-  immutable: Immutable
-): Reducer<STATE, $Subtype<Action>> => {
+  immutable: Immutable,
+): Reducer<STATE, any> => {
   if (!initialState) {
     throw new Error('initial state is required')
   }
@@ -59,8 +59,8 @@ const createReducer = <STATE, INNER_STATE, ACTION_BASE: Action & { attributes: *
         immutable(initialState),
         state,
         action,
-        handler
-      )
+        handler,
+      ),
     )
   }
 }
@@ -96,7 +96,7 @@ export const createReduxAdvanced = <
   const types: TypeMap<$Keys<$PropertyType<ATTRIBUTES, 'handlers'>>> = createTypes(handlersKeys, _attributes.prefix)
 
   const applyResettable = reducer => attributes.resettable ? resettableReducer(reducer) : reducer
-  const reducer: Reducer<STATE, $Subtype<Action>> = applyResettable(
+  const reducer: Reducer<STATE, Action> = applyResettable(
     createReducer(
       _attributes.initialState,
       handlersKeys.reduce((handlerMap, handlerKey) => {
@@ -105,7 +105,7 @@ export const createReduxAdvanced = <
       }, {}),
       attributes.handlerWrapper,
       immutable,
-    )
+    ),
   )
 
   const creators = handlersKeys.reduce((creatorList, handlerKey) => {
@@ -146,11 +146,11 @@ export const createRedux = <
 >(attributes: ATTRIBUTES): Redux<STATE, $ObjMap<$PropertyType<ATTRIBUTES, 'handlers'>, ExtractActionCreatorReturnType>> => {
   return createReduxAdvanced({
     ...attributes,
-    handlerWrapper: <ACTION: $Subtype<Action>>(
+    handlerWrapper: <ACTION: any>(
       initialState: STATE,
       state: ?STATE,
       action: ACTION,
-      handler: ?Handler<STATE, ACTION>
+      handler: ?Handler<STATE, ACTION>,
     ) => handler ? handler(state || initialState, action.attributes, action) : (state || initialState),
   })
 }

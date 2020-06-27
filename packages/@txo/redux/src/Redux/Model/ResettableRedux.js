@@ -32,7 +32,7 @@ export const resettableReducer = <STATE, ACTION> (originalReducer: Reducer<STATE
   if (typeof originalReducer !== 'function') {
     throw new Error('A reducer is required.')
   }
-  let resetState = originalReducer((undefined: any), ({}: any))
+  const resetState = originalReducer((undefined: any), ({}: any))
 
   const reducer = (state = resetState, action) => {
     return action && action.type === types.RESET

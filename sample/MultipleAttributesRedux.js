@@ -10,7 +10,7 @@ import {
   type ActionCreator,
   type Redux,
   createRedux,
-} from '../lib'
+} from '@txo/redux'
 import update from 'immutability-helper'
 
 type SetFirtAttributes = {

@@ -14,5 +14,5 @@
  */
 
 declare module 'constant-case' {
-  declare module.exports: (value: string, locale?: string) => string;
+  declare export var constantCase: (value: string, locale?: string) => string;
 }
