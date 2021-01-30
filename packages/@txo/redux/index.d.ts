@@ -34,7 +34,7 @@ declare module "@txo/redux" {
 
   type ActionCreator<
     ATTRIBUTES,
-    ADDITIONAL_ACTION_ATTRIBUTES,
+    ADDITIONAL_ACTION_ATTRIBUTES = unknown,
   > = (
     attributes: ATTRIBUTES,
     actionAttribues: ADDITIONAL_ACTION_ATTRIBUTES,
