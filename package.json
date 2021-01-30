@@ -19,7 +19,9 @@
     "lint": "eslint --format=node_modules/eslint-formatter-pretty .",
     "fixcode": "eslint --format=node_modules/eslint-formatter-pretty . --fix",
     "git-hook": "yarn -s lint && yarn flow check",
-    "sanity": "yarn lint && yarn flow check && yarn test && yarn outdated && echo 'success'"
+    "sanity": "yarn lint && yarn flow check && yarn test && yarn outdated && echo 'success'",
+    "wd": "yarn workspace @txo/redux",
+    "wpd": "yarn workspace @txo-peer-dep/redux"
   },
   "workspaces": [
     "packages/@txo/*",
