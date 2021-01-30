@@ -48,7 +48,7 @@ declare module "@txo/redux" {
   ) => STATE
 
   type GetNodeReduxState <NODE_REDUX> = NODE_REDUX extends NodeRedux<infer STATE> ? STATE : never
-  type ExtractNodeReduxState<STATE> = { [key in keyof STATE]: GetNodeReduxState<STATE[keyof STATE]> }
+  type ExtractNodeReduxState<NODE_REDUX_MAP> = { [KEY in keyof NODE_REDUX_MAP]: GetNodeReduxState<NODE_REDUX_MAP[KEY]> }
 
   function combineRedux <NODE_REDUX_MAP extends NodeReduxMap> (
     reduxMap: NODE_REDUX_MAP
