@@ -33,8 +33,8 @@ declare module "@txo/redux" {
   }
 
   type ActionCreator<
-    ATTRIBUTES,
-    ADDITIONAL_ACTION_ATTRIBUTES = unknown,
+    ATTRIBUTES = void,
+    ADDITIONAL_ACTION_ATTRIBUTES = void,
   > = (
     attributes: ATTRIBUTES,
     actionAttribues: ADDITIONAL_ACTION_ATTRIBUTES,
@@ -42,7 +42,7 @@ declare module "@txo/redux" {
 
   type ExtractHandlerActionAttributes<STATE, HANDLER> = HANDLER extends ReduxHandler<STATE, infer ATTRIBUTES> ? ATTRIBUTES : never
 
-  type ReduxHandler<STATE, ATTRIBUTES> = (
+  type ReduxHandler<STATE, ATTRIBUTES = void> = (
     state: STATE,
     attributes: ATTRIBUTES,
   ) => STATE
@@ -67,7 +67,7 @@ declare module "@txo/redux" {
   }
 
   type Creators<STATE, HANDLERS> = {
-    [KEY in keyof HANDLERS]: ActionCreator<ExtractHandlerActionAttributes<STATE, HANDLERS[KEY]>, unknown>
+    [KEY in keyof HANDLERS]: ActionCreator<ExtractHandlerActionAttributes<STATE, HANDLERS[KEY]>, any>
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
