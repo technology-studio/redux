@@ -5,11 +5,12 @@ declare module "@txo/redux" {
     type: string,
   }
 
-  type Filter = '*'
-  type FilterNode = { [key: string]: FilterNode | Filter } | Filter
+  type FilterLeaf = '*' | boolean
+  type FilterNode = { [key: string]: FilterNode } | FilterLeaf
+  type Filter = { [key: string]: FilterNode }
 
   type NodeRedux<STATE> = {
-    filter: FilterNode,
+    filter: Filter,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reducer: Reducer<STATE, any>,
   }
