@@ -58,7 +58,7 @@ declare module "@txo/redux" {
   type ImmutableWrapper = <VALUE>(value: VALUE) => VALUE
 
   type CreateReduxAttributes<STATE> = {
-    filter: FilterNode,
+    filter: FilterNode | Function,
     initialState: STATE,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     handlers: { [key: string]: ReduxHandler<STATE, any> },
