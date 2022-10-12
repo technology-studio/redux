@@ -75,10 +75,10 @@ const createReducer = <
 
 // const defaultFilter = {}
 
-export type Attributes<STATE, HANDLER_KEY extends string | number | symbol> = {
+export type Attributes<STATE, HANDLERS extends Record<keyof HANDLERS, ReduxHandler<STATE>>> = {
   filter: Filter,
   initialState: STATE,
-  handlers: Record<HANDLER_KEY, ReduxHandler<STATE, any>>,
+  handlers: HANDLERS,
   prefix: string,
   resettable?: boolean,
   immutable?: Immutable,
@@ -88,8 +88,8 @@ export type AttributesAdvanced<
   STATE,
   INNER_STATE,
   ACTION_BASE extends HandlerAction<Record<string, unknown>>,
-  HANDLER_KEY extends string | number | symbol,
-> = Attributes<INNER_STATE, HANDLER_KEY> & {
+  HANDLERS extends Record<keyof HANDLERS, ReduxHandler<INNER_STATE>>,
+> = Attributes<INNER_STATE, HANDLERS> & {
   handlerWrapper: HandlerWrapper<STATE, INNER_STATE, ACTION_BASE>,
 }
 
@@ -97,24 +97,24 @@ export const createReduxAdvanced = <
   STATE,
   INNER_STATE,
   ACTION_BASE extends HandlerAction<Record<string, unknown>>,
-  ATTRIBUTES extends AttributesAdvanced<STATE, INNER_STATE, ACTION_BASE, keyof ATTRIBUTES['handlers']>,
->(attributes: ATTRIBUTES): Redux<STATE, Creators<STATE, ATTRIBUTES['handlers']>> => {
+  ATTRIBUTES extends AttributesAdvanced<STATE, INNER_STATE, ACTION_BASE, HANDLERS>,
+  HANDLERS extends Record<keyof ATTRIBUTES['handlers'], ReduxHandler<INNER_STATE>>,
+>(attributes: ATTRIBUTES): Redux<STATE, HANDLERS> => {
   // const _attributes: AttributesAdvanced<STATE, INNER_STATE, ACTION_BASE> = {
   //   // filter: defaultFilter,
   //   ...attributes,
   // }
   const immutable: Immutable = attributes.immutable ?? identity
-  const handlers: ATTRIBUTES['handlers'] = attributes.handlers
-  const handlersKeys = Object.keys(handlers) as (keyof ATTRIBUTES['handlers'])[]
-  // const handlersKeys: string[] = Object.keys(handlers)
-  const types: TypeMap<keyof ATTRIBUTES['handlers']> = createTypes(handlersKeys, attributes.prefix)
+  const handlers: HANDLERS = attributes.handlers
+  const handlersKeys = Object.keys(handlers) as (keyof HANDLERS)[]
+  const types: TypeMap<keyof HANDLERS> = createTypes(handlersKeys, attributes.prefix)
 
   const applyResettable = <STATE, ACTION extends Action>(reducer: Reducer<STATE, ACTION>): Reducer<STATE, ACTION> => attributes.resettable ? resettableReducer(reducer) : reducer
 
   const reducer: Reducer<STATE, ACTION_BASE> = applyResettable(
     createReducer(
       attributes.initialState,
-      handlersKeys.reduce<Record<string, ReduxHandler<INNER_STATE, unknown>>>(
+      handlersKeys.reduce<Record<string, ReduxHandler<INNER_STATE>>>(
         (handlerMap, handlerKey) => {
           handlerMap[types[handlerKey]] = handlers[handlerKey]
           return handlerMap
@@ -126,7 +126,7 @@ export const createReduxAdvanced = <
     ),
   )
 
-  const creators = handlersKeys.reduce<Creators<STATE, ATTRIBUTES['handlers']>>((creatorList, handlerKey) => {
+  const creators = handlersKeys.reduce<Creators<STATE, HANDLERS>>((creatorList, handlerKey) => {
     creatorList[handlerKey] = (attributes, actionAttributes) => ({
       type: types[handlerKey],
       attributes,
@@ -134,7 +134,7 @@ export const createReduxAdvanced = <
     })
     return creatorList
   // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
-  }, {} as Creators<STATE, ATTRIBUTES['handlers']>)
+  }, {} as Creators<STATE, HANDLERS>)
 
   return {
     prefix: attributes.prefix,
@@ -147,12 +147,13 @@ export const createReduxAdvanced = <
 
 export const combineRedux = (reduxMap: NodeReduxMap): {
   filter: Record<string, unknown>,
-  reducer: Reducer<any>, // TODO: fix Reducer<$ObjMap<typeof reduxMap, <S>(r: Reducer<S, any>) => S>, *>,
+  reducer: Reducer, // TODO: fix Reducer<$ObjMap<typeof reduxMap, <S>(r: Reducer<S, any>) => S>, *>,
 } => ({
   filter: Object.keys(reduxMap).reduce<Record<string, Filter>>((filterMap, key) => {
     filterMap[key] = reduxMap[key].filter
     return filterMap
   }, {}),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   reducer: combineReducers(Object.keys(reduxMap).reduce<Record<string, Reducer<unknown, any>>>((reducerMap, key) => {
     reducerMap[key] = reduxMap[key].reducer
     return reducerMap
@@ -161,12 +162,13 @@ export const combineRedux = (reduxMap: NodeReduxMap): {
 
 export const createRedux = <
   STATE,
-  HANDLERS extends Record<keyof HANDLERS, ReduxHandler<STATE, any>>,
->(attributes: Attributes<STATE, keyof HANDLERS>): Redux<STATE, Creators<STATE, HANDLERS>> => createReduxAdvanced<
+  HANDLERS extends Record<keyof HANDLERS, ReduxHandler<STATE>>,
+>(attributes: Attributes<STATE, HANDLERS>): Redux<STATE, HANDLERS> => createReduxAdvanced<
   STATE,
   STATE,
   HandlerAction<Record<string, unknown>>,
-  AttributesAdvanced<STATE, STATE, HandlerAction<Record<string, unknown>>, keyof HANDLERS>
+  AttributesAdvanced<STATE, STATE, HandlerAction<Record<string, unknown>>, HANDLERS>,
+  HANDLERS
   >({
     ...attributes,
     handlerWrapper: <ACTION extends HandlerAction<Record<string, unknown>>>(

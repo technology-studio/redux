@@ -43,9 +43,9 @@ export const redux = createRedux<State, Handlers<State>>({
   },
   initialState: INITIAL_STATE,
   handlers: {
-    setFirst: (state, { type, first }) => update(state, { first: { $set: first } }),
+    setFirst: (state, { first }) => update(state, { first: { $set: first } }),
     clearFirst: state => update(state, { first: { $set: null } }),
-    setSecond: (state, { type, second }) => update(state, { second: { $set: second } }),
+    setSecond: (state, { second }) => update(state, { second: { $set: second } }),
     clearSecond: state => update(state, { second: { $set: null } }),
   },
   prefix: '.sample.prefix',

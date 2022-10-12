@@ -3,22 +3,8 @@
  * @Date:   2018-03-17T13:08:21+01:00
  * @Email:  rostislav.simonik@technologystudio.sk
  * @Copyright: Technology Studio
- * @flow
- */
+**/
 
-import type {
-  AbstractRedux,
-  Action,
-  ActionCreator,
-  Handler,
-  HandlerAction,
-  HandlerWrapper,
-  NodeRedux,
-  NodeReduxMap,
-  Redux,
-  ReduxHandler,
-  TypeMap,
-} from './Model/Types'
 import {
   createRedux,
   createReduxAdvanced,
@@ -30,6 +16,7 @@ import {
   resettableReducer,
   resettableRedux,
 } from './Redux/Model/ResettableRedux'
+export * from './Model/Types'
 export {
   combineRedux,
   createRedux,
@@ -39,17 +26,6 @@ export {
 }
 
 export type {
-  AbstractRedux,
-  Action,
-  ActionCreator,
   Attributes,
   AttributesAdvanced,
-  Handler,
-  HandlerAction,
-  HandlerWrapper,
-  NodeRedux,
-  NodeReduxMap,
-  Redux,
-  ReduxHandler,
-  TypeMap,
 }

@@ -19,6 +19,7 @@ export type TypeMap<KEY extends string | number | symbol> = Record<KEY, string>
 
 export type NodeRedux<STATE> = {
   filter: Filter,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   reducer: Reducer<STATE, any>,
 }
 
@@ -26,18 +27,20 @@ export type AbstractRedux<STATE> = NodeRedux<STATE> & {
   prefix: string,
 }
 
-export type Redux<STATE, CREATORS> = AbstractRedux<STATE> & {
-  types: TypeMap<keyof CREATORS>,
-  creators: CREATORS,
+export type Redux<STATE, HANDLERS> = AbstractRedux<STATE> & {
+  types: TypeMap<keyof HANDLERS>,
+  creators: Creators<STATE, HANDLERS>,
 }
 
 export type ExtractHandlerActionAttributes<STATE, HANDLER> = HANDLER extends ReduxHandler<STATE, infer ATTRIBUTES> ? ATTRIBUTES : never
 
 export type Creators<STATE, HANDLERS> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [KEY in keyof HANDLERS]: ActionCreator<ExtractHandlerActionAttributes<STATE, HANDLERS[KEY]>, any>
 }
 
 export type NodeReduxMap = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: NodeRedux<any>,
 }
 
@@ -53,7 +56,8 @@ export type ActionCreator<
   actionAttributes?: ADDITIONAL_ACTION_ATTRIBUTES,
 ) => HandlerAction<ATTRIBUTES> & ADDITIONAL_ACTION_ATTRIBUTES
 
-export type ReduxHandler<STATE, ATTRIBUTES = undefined> = (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ReduxHandler<STATE, ATTRIBUTES extends Record<string, unknown> | any = any> = (
   state: STATE,
   attributes: ATTRIBUTES,
 ) => STATE
