@@ -52,8 +52,8 @@ export type ActionCreator<
   ATTRIBUTES = Record<string, unknown> | undefined,
   ADDITIONAL_ACTION_ATTRIBUTES = Record<string, unknown> | undefined,
 > = (
-  // attributes: ATTRIBUTES extends undefined ? void : ATTRIBUTES,
-  attributes: ATTRIBUTES,
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  attributes: ATTRIBUTES extends undefined ? void : ATTRIBUTES,
   actionAttributes?: ADDITIONAL_ACTION_ATTRIBUTES,
 ) => HandlerAction<ATTRIBUTES> & ADDITIONAL_ACTION_ATTRIBUTES
 
