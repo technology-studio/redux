@@ -151,7 +151,7 @@ export const createReduxAdvanced = <
 }
 
 export const combineRedux = (reduxMap: NodeReduxMap): {
-  filter: Record<string, unknown>,
+  filter: Filter,
   reducer: Reducer, // TODO: fix Reducer<$ObjMap<typeof reduxMap, <S>(r: Reducer<S, any>) => S>, *>,
 } => ({
   filter: Object.keys(reduxMap).reduce<Record<string, Filter>>((filterMap, key) => {
