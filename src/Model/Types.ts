@@ -27,16 +27,16 @@ export type AbstractRedux<STATE> = NodeRedux<STATE> & {
   prefix: string,
 }
 
-export type Redux<STATE, HANDLERS> = AbstractRedux<STATE> & {
-  types: TypeMap<keyof HANDLERS>,
-  creators: Creators<STATE, HANDLERS>,
+export type Redux<STATE, INNER_STATE, HANDLER_KEY extends string, HANDLERS extends Record<HANDLER_KEY, ReduxHandler<INNER_STATE, any>>> = AbstractRedux<STATE> & {
+  types: TypeMap<HANDLER_KEY>,
+  creators: Creators<INNER_STATE, HANDLER_KEY, HANDLERS>,
 }
 
 export type ExtractHandlerActionAttributes<STATE, HANDLER> = HANDLER extends ReduxHandler<STATE, infer ATTRIBUTES> ? ATTRIBUTES : never
 
-export type Creators<STATE, HANDLERS> = {
+export type Creators<INNER_STATE, HANDLER_KEY extends string, HANDLERS extends Record<HANDLER_KEY, ReduxHandler<INNER_STATE>>> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [KEY in keyof HANDLERS]: ActionCreator<ExtractHandlerActionAttributes<STATE, HANDLERS[KEY]>, any>
+  [KEY in HANDLER_KEY]: ActionCreator<ExtractHandlerActionAttributes<INNER_STATE, HANDLERS[KEY]>, any>
 }
 
 export type NodeReduxMap = {
@@ -52,6 +52,7 @@ export type ActionCreator<
   ATTRIBUTES = Record<string, unknown> | undefined,
   ADDITIONAL_ACTION_ATTRIBUTES = Record<string, unknown> | undefined,
 > = (
+  // attributes: ATTRIBUTES extends undefined ? void : ATTRIBUTES,
   attributes: ATTRIBUTES,
   actionAttributes?: ADDITIONAL_ACTION_ATTRIBUTES,
 ) => HandlerAction<ATTRIBUTES> & ADDITIONAL_ACTION_ATTRIBUTES
@@ -62,14 +63,13 @@ export type ReduxHandler<STATE, ATTRIBUTES extends Record<string, unknown> | any
   attributes: ATTRIBUTES,
 ) => STATE
 
-export type Handler<STATE, ACTION extends HandlerAction<Record<string, unknown>>> = (
-  state: STATE,
+export type Handler<INNER_STATE, ACTION extends HandlerAction<Record<string, unknown>>> = (
+  state: INNER_STATE,
   attributes: ACTION['attributes'],
   action: ACTION,
-) => STATE
+) => INNER_STATE
 
 export type HandlerWrapper<STATE, INNER_STATE, ACTION_BASE extends HandlerAction<Record<string, unknown>>> = <ACTION extends ACTION_BASE>(
-  initialState: INNER_STATE,
   state: STATE | undefined,
   action: ACTION,
   handler: Handler<INNER_STATE, ACTION> | undefined,

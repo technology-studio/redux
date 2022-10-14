@@ -64,7 +64,6 @@ const createReducer = <
       immutable,
       state,
       handlerWrapper(
-        immutable(initialState),
         state,
         action,
         handler,
@@ -75,9 +74,13 @@ const createReducer = <
 
 // const defaultFilter = {}
 
-export type Attributes<STATE, HANDLERS extends Record<keyof HANDLERS, ReduxHandler<STATE>>> = {
+export type Attributes<
+INNER_STATE,
+HANDLER_KEY extends string,
+HANDLERS extends Record<HANDLER_KEY, ReduxHandler<INNER_STATE>>
+> = {
   filter: Filter,
-  initialState: STATE,
+  initialState: INNER_STATE,
   handlers: HANDLERS,
   prefix: string,
   resettable?: boolean,
@@ -88,8 +91,9 @@ export type AttributesAdvanced<
   STATE,
   INNER_STATE,
   ACTION_BASE extends HandlerAction<Record<string, unknown>>,
-  HANDLERS extends Record<keyof HANDLERS, ReduxHandler<INNER_STATE>>,
-> = Attributes<INNER_STATE, HANDLERS> & {
+  HANDLER_KEY extends string,
+  HANDLERS extends Record<HANDLER_KEY, ReduxHandler<INNER_STATE>>,
+> = Attributes<INNER_STATE, HANDLER_KEY, HANDLERS> & {
   handlerWrapper: HandlerWrapper<STATE, INNER_STATE, ACTION_BASE>,
 }
 
@@ -97,17 +101,18 @@ export const createReduxAdvanced = <
   STATE,
   INNER_STATE,
   ACTION_BASE extends HandlerAction<Record<string, unknown>>,
-  ATTRIBUTES extends AttributesAdvanced<STATE, INNER_STATE, ACTION_BASE, HANDLERS>,
-  HANDLERS extends Record<keyof ATTRIBUTES['handlers'], ReduxHandler<INNER_STATE>>,
->(attributes: ATTRIBUTES): Redux<STATE, HANDLERS> => {
+  HANDLER_KEY extends string,
+  HANDLERS extends Record<HANDLER_KEY, ReduxHandler<INNER_STATE>>,
+  ATTRIBUTES extends AttributesAdvanced<STATE, INNER_STATE, ACTION_BASE, HANDLER_KEY, HANDLERS>,
+> (attributes: ATTRIBUTES): Redux<STATE, INNER_STATE, HANDLER_KEY, HANDLERS> => {
   // const _attributes: AttributesAdvanced<STATE, INNER_STATE, ACTION_BASE> = {
   //   // filter: defaultFilter,
   //   ...attributes,
   // }
   const immutable: Immutable = attributes.immutable ?? identity
   const handlers: HANDLERS = attributes.handlers
-  const handlersKeys = Object.keys(handlers) as (keyof HANDLERS)[]
-  const types: TypeMap<keyof HANDLERS> = createTypes(handlersKeys, attributes.prefix)
+  const handlersKeys = Object.keys(handlers) as (HANDLER_KEY)[]
+  const types: TypeMap<HANDLER_KEY> = createTypes(handlersKeys, attributes.prefix)
 
   const applyResettable = <STATE, ACTION extends Action>(reducer: Reducer<STATE, ACTION>): Reducer<STATE, ACTION> => attributes.resettable ? resettableReducer(reducer) : reducer
 
@@ -126,7 +131,7 @@ export const createReduxAdvanced = <
     ),
   )
 
-  const creators = handlersKeys.reduce<Creators<STATE, HANDLERS>>((creatorList, handlerKey) => {
+  const creators = handlersKeys.reduce<Creators<INNER_STATE, HANDLER_KEY, HANDLERS>>((creatorList, handlerKey) => {
     creatorList[handlerKey] = (attributes, actionAttributes) => ({
       type: types[handlerKey],
       attributes,
@@ -134,7 +139,7 @@ export const createReduxAdvanced = <
     })
     return creatorList
   // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
-  }, {} as Creators<STATE, HANDLERS>)
+  }, {} as Creators<INNER_STATE, HANDLER_KEY, HANDLERS>)
 
   return {
     prefix: attributes.prefix,
@@ -162,19 +167,20 @@ export const combineRedux = (reduxMap: NodeReduxMap): {
 
 export const createRedux = <
   STATE,
-  HANDLERS extends Record<keyof HANDLERS, ReduxHandler<STATE>>,
->(attributes: Attributes<STATE, HANDLERS>): Redux<STATE, HANDLERS> => createReduxAdvanced<
+  HANDLER_KEY extends string,
+  HANDLERS extends Record<HANDLER_KEY, ReduxHandler<STATE>>,
+>(attributes: Attributes<STATE, HANDLER_KEY, HANDLERS>): Redux<STATE, STATE, HANDLER_KEY, HANDLERS> => createReduxAdvanced<
   STATE,
   STATE,
   HandlerAction<Record<string, unknown>>,
-  AttributesAdvanced<STATE, STATE, HandlerAction<Record<string, unknown>>, HANDLERS>,
-  HANDLERS
+  HANDLER_KEY,
+  HANDLERS,
+  AttributesAdvanced<STATE, STATE, HandlerAction<Record<string, unknown>>, HANDLER_KEY, HANDLERS>
   >({
     ...attributes,
     handlerWrapper: <ACTION extends HandlerAction<Record<string, unknown>>>(
-      initialState: STATE,
       state: STATE | undefined,
       action: ACTION,
       handler: Handler<STATE, ACTION> | undefined,
-    ) => handler ? handler(state ?? initialState, action.attributes, action) : (state ?? initialState),
+    ) => handler ? handler(state ?? attributes.initialState, action.attributes, action) : (state ?? attributes.initialState),
   })

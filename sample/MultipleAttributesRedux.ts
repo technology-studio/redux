@@ -37,7 +37,7 @@ export const INITIAL_STATE = {
   second: null,
 }
 
-export const redux = createRedux<State, Handlers<State>>({
+export const redux = createRedux<State, keyof Handlers<State>, Handlers<State>>({
   filter: {
     first: true,
   },
