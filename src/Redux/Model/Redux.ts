@@ -18,7 +18,7 @@ import type {
   NodeReduxMap,
   Redux,
   TypeMap,
-  Filter,
+  FilterNode,
   ReduxHandler,
   Creators,
 } from '../../Model/Types'
@@ -79,7 +79,7 @@ INNER_STATE,
 HANDLER_KEY extends string,
 HANDLERS extends Record<HANDLER_KEY, ReduxHandler<INNER_STATE>>
 > = {
-  filter: Filter,
+  filter: FilterNode,
   initialState: INNER_STATE,
   handlers: HANDLERS,
   prefix: string,
@@ -151,10 +151,10 @@ export const createReduxAdvanced = <
 }
 
 export const combineRedux = (reduxMap: NodeReduxMap): {
-  filter: Filter,
+  filter: FilterNode,
   reducer: Reducer, // TODO: fix Reducer<$ObjMap<typeof reduxMap, <S>(r: Reducer<S, any>) => S>, *>,
 } => ({
-  filter: Object.keys(reduxMap).reduce<Record<string, Filter>>((filterMap, key) => {
+  filter: Object.keys(reduxMap).reduce<Record<string, FilterNode>>((filterMap, key) => {
     filterMap[key] = reduxMap[key].filter
     return filterMap
   }, {}),

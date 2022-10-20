@@ -18,7 +18,7 @@ export type Filter = { [key: string]: FilterNode }
 export type TypeMap<KEY extends string | number | symbol> = Record<KEY, string>
 
 export type NodeRedux<STATE> = {
-  filter: Filter,
+  filter: FilterNode,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   reducer: Reducer<STATE, any>,
 }
