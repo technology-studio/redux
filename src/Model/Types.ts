@@ -6,12 +6,14 @@
 **/
 
 import type { Reducer } from 'redux'
+import type { Translate } from '@txo/functional'
 
 export type Action = {
   type: string,
 }
 
-export type FilterLeaf = '*' | boolean
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FilterLeaf = '*' | Translate<any> | boolean
 export type FilterNode = { [key: string]: FilterNode } | FilterLeaf
 export type Filter = { [key: string]: FilterNode }
 
