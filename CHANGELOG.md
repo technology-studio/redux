@@ -1,3 +1,10 @@
+## [4.0.9](https://github.com/technology-studio/redux/compare/v4.0.8...v4.0.9) (2022-10-25)
+
+
+### Bug fixes
+
+* add Translate type to FilterLeaf ([#40](https://github.com/technology-studio/redux/issues/40)) ([e567bb5](https://github.com/technology-studio/redux/commit/e567bb529e90aa74da112fabaae7d667560dba4b))
+
 ## [4.0.8](https://github.com/technology-studio/redux/compare/v4.0.7...v4.0.8) (2022-10-24)
 
 
