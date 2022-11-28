@@ -34,7 +34,7 @@
     "update-boilerplate-version": "./scripts/update-boilerplate-version.sh"
   },
   "dependencies": {
-    "@txo/functional": "^4.5.1",
+    "@txo/functional": "^4.5.2",
     "constant-case": "^3.0.4",
     "redux": "^4.2.0"
   },
