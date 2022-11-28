@@ -1,3 +1,10 @@
+## [4.0.10](https://github.com/technology-studio/redux/compare/v4.0.9...v4.0.10) (2022-11-28)
+
+
+### Bug fixes
+
+* **deps:** update dependency @txo/functional to ^4.5.2 ([00e7184](https://github.com/technology-studio/redux/commit/00e7184da8212387d87583df84034fd8b28fd9d9))
+
 ## [4.0.9](https://github.com/technology-studio/redux/compare/v4.0.8...v4.0.9) (2022-10-25)
 
 
