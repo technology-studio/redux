@@ -36,7 +36,7 @@
   "dependencies": {
     "@txo/functional": "^4.5.2",
     "constant-case": "^3.0.4",
-    "redux": "^4.2.0"
+    "redux": "^4.2.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
