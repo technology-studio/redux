@@ -1,3 +1,10 @@
+## [4.0.11](https://github.com/technology-studio/redux/compare/v4.0.10...v4.0.11) (2023-01-29)
+
+
+### Bug fixes
+
+* **deps:** update dependency redux to ^4.2.1 ([61986e8](https://github.com/technology-studio/redux/commit/61986e8f472ec90fa5ef5eb17c304107b72623c1))
+
 ## [4.0.10](https://github.com/technology-studio/redux/compare/v4.0.9...v4.0.10) (2022-11-28)
 
 
