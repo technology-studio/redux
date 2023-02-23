@@ -15,7 +15,7 @@ export type Action = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FilterLeaf = '*' | Translate<any> | boolean
 export type FilterNode = { [key: string]: FilterNode } | FilterLeaf
-export type Filter = { [key: string]: FilterNode }
+export type Filter = Record<string, FilterNode>
 
 export type TypeMap<KEY extends string | number | symbol> = Record<KEY, string>
 
@@ -29,6 +29,7 @@ export type AbstractRedux<STATE> = NodeRedux<STATE> & {
   prefix: string,
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Redux<STATE, INNER_STATE, HANDLER_KEY extends string, HANDLERS extends Record<HANDLER_KEY, ReduxHandler<INNER_STATE, any>>> = AbstractRedux<STATE> & {
   types: TypeMap<HANDLER_KEY>,
   creators: Creators<INNER_STATE, HANDLER_KEY, HANDLERS>,
@@ -41,10 +42,8 @@ export type Creators<INNER_STATE, HANDLER_KEY extends string, HANDLERS extends R
   [KEY in HANDLER_KEY]: ActionCreator<ExtractHandlerActionAttributes<INNER_STATE, HANDLERS[KEY]>, any>
 }
 
-export type NodeReduxMap = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: NodeRedux<any>,
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type NodeReduxMap = Record<string, NodeRedux<any>>
 
 export type HandlerAction<HANDLER_ATTRIBUTES> = Action & {
   attributes: HANDLER_ATTRIBUTES,
@@ -77,6 +76,4 @@ export type HandlerWrapper<STATE, INNER_STATE, ACTION_BASE extends HandlerAction
   handler: Handler<INNER_STATE, ACTION> | undefined,
 ) => STATE
 
-export type HandlerMap<STATE> = {
-  [key: string | number | symbol]: Handler<STATE, HandlerAction<Record<string, unknown>>>,
-}
+export type HandlerMap<STATE> = Record<string | number | symbol, Handler<STATE, HandlerAction<Record<string, unknown>>>>

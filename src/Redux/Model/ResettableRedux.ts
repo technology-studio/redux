@@ -34,7 +34,7 @@ export const resettableReducer = <STATE, ACTION extends Action> (originalReducer
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const resetState = originalReducer((undefined as any), ({} as any))
 
-  const reducer = (state = resetState, action: ACTION): STATE => action && action.type === types.RESET
+  const reducer = (state = resetState, action: ACTION): STATE => action.type === types.RESET
     ? resetState
     : originalReducer(state, action)
   return reducer
