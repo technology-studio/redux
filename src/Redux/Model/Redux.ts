@@ -38,7 +38,7 @@ type Immutable = <VALUE>(value: VALUE) => VALUE
 
 const identity = <VALUE>(value: VALUE): VALUE => value
 
-const wrapImmutable = <VALUE>(immutable: Immutable, previous: VALUE | undefined, next: VALUE): VALUE => previous && previous === next ? previous : immutable(next)
+const wrapImmutable = <VALUE>(immutable: Immutable, previous: VALUE | undefined, next: VALUE): VALUE => previous != null && previous === next ? previous : immutable(next)
 
 const createReducer = <
   STATE,
@@ -50,13 +50,13 @@ const createReducer = <
     handlerWrapper: HandlerWrapper<STATE, INNER_STATE, HandlerAction<Record<string, unknown>>>,
     immutable: Immutable,
   ): Reducer<STATE, ACTION_BASE> => {
-  if (!initialState) {
+  if (initialState == null) {
     throw new Error('initial state is required')
   }
 
   return (state: STATE | undefined, action: ACTION_BASE): STATE => {
     let handler
-    if (action?.type) {
+    if (action?.type != null && action.type !== '') {
       const type: string = action.type
       handler = handlerMap[type]
     }
@@ -114,7 +114,7 @@ export const createReduxAdvanced = <
   const handlersKeys = Object.keys(handlers) as (HANDLER_KEY)[]
   const types: TypeMap<HANDLER_KEY> = createTypes(handlersKeys, attributes.prefix)
 
-  const applyResettable = <STATE, ACTION extends Action>(reducer: Reducer<STATE, ACTION>): Reducer<STATE, ACTION> => attributes.resettable ? resettableReducer(reducer) : reducer
+  const applyResettable = <STATE, ACTION extends Action>(reducer: Reducer<STATE, ACTION>): Reducer<STATE, ACTION> => attributes.resettable ?? false ? resettableReducer(reducer) : reducer
 
   const reducer: Reducer<STATE, ACTION_BASE> = applyResettable(
     createReducer(
@@ -182,5 +182,5 @@ export const createRedux = <
       state: STATE | undefined,
       action: ACTION,
       handler: Handler<STATE, ACTION> | undefined,
-    ) => handler ? handler(state ?? attributes.initialState, action.attributes, action) : (state ?? attributes.initialState),
+    ) => (handler != null) ? handler(state ?? attributes.initialState, action.attributes, action) : (state ?? attributes.initialState),
   })
