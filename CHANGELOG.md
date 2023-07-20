@@ -1,3 +1,10 @@
+## [4.0.13](https://github.com/technology-studio/redux/compare/v4.0.12...v4.0.13) (2023-07-20)
+
+
+### Bug fixes
+
+* **deps:** update eslint txo packages ([#285](https://github.com/technology-studio/redux/issues/285)) ([2f10226](https://github.com/technology-studio/redux/commit/2f102262a5d156e23a6a9e68dd32622212f17ce4))
+
 ## [4.0.12](https://github.com/technology-studio/redux/compare/v4.0.11...v4.0.12) (2023-03-08)
 
 
