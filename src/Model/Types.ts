@@ -58,7 +58,7 @@ export type ActionCreator<
   actionAttributes?: ADDITIONAL_ACTION_ATTRIBUTES,
 ) => HandlerAction<ATTRIBUTES> & ADDITIONAL_ACTION_ATTRIBUTES
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-redundant-type-constituents
 export type ReduxHandler<STATE, ATTRIBUTES extends Record<string, unknown> | any = any> = (
   state: STATE,
   attributes: ATTRIBUTES,

@@ -132,6 +132,7 @@ export const createReduxAdvanced = <
   )
 
   const creators = handlersKeys.reduce<Creators<INNER_STATE, HANDLER_KEY, HANDLERS>>((creatorList, handlerKey) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     creatorList[handlerKey] = (attributes, actionAttributes) => ({
       type: types[handlerKey],
       attributes,
