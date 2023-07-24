@@ -52,9 +52,9 @@ export type ActionCreator<
   ATTRIBUTES = Record<string, unknown> | undefined,
   ADDITIONAL_ACTION_ATTRIBUTES = Record<string, unknown> | undefined,
 > = (
-  attributes: undefined extends ATTRIBUTES ? undefined : ATTRIBUTES,
+  attributes: ATTRIBUTES extends undefined ? undefined : ATTRIBUTES,
   actionAttributes?: ADDITIONAL_ACTION_ATTRIBUTES,
-) => HandlerAction<undefined extends ATTRIBUTES ? undefined : ATTRIBUTES> & ADDITIONAL_ACTION_ATTRIBUTES
+) => HandlerAction<ATTRIBUTES extends undefined ? undefined : ATTRIBUTES> & ADDITIONAL_ACTION_ATTRIBUTES
 
 export type ReduxHandler<STATE, ATTRIBUTES extends Record<string, unknown> = Record<string, unknown>> = (
   state: STATE,
