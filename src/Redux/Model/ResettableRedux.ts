@@ -31,7 +31,8 @@ export const resettableReducer = <STATE, ACTION extends Action> (originalReducer
   if (typeof originalReducer !== 'function') {
     throw new Error('A reducer is required.')
   }
-  const resetState = originalReducer(undefined, {} as unknown as ACTION)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const resetState = originalReducer((undefined as any), ({} as any))
 
   const reducer = (state = resetState, action: ACTION): STATE => action.type === types.RESET
     ? resetState
