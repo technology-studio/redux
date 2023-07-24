@@ -132,6 +132,7 @@ export const createReduxAdvanced = <
   )
 
   const creators = handlersKeys.reduce<Creators<INNER_STATE, HANDLER_KEY, HANDLERS>>((creatorList, handlerKey) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     creatorList[handlerKey] = (attributes, actionAttributes) => ({
       type: types[handlerKey],
       attributes,
@@ -168,8 +169,7 @@ export const combineRedux = (reduxMap: NodeReduxMap): {
 export const createRedux = <
   STATE,
   HANDLER_KEY extends string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  HANDLERS extends Record<HANDLER_KEY, ReduxHandler<STATE, any>>,
+  HANDLERS extends Record<HANDLER_KEY, ReduxHandler<STATE>>,
 >(attributes: Attributes<STATE, HANDLER_KEY, HANDLERS>): Redux<STATE, STATE, HANDLER_KEY, HANDLERS> => createReduxAdvanced<
   STATE,
   STATE,

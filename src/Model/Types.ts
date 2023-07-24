@@ -38,7 +38,8 @@ export type Redux<STATE, INNER_STATE, HANDLER_KEY extends string, HANDLERS exten
 export type ExtractHandlerActionAttributes<STATE, HANDLER> = HANDLER extends ReduxHandler<STATE, infer ATTRIBUTES> ? ATTRIBUTES : never
 
 export type Creators<INNER_STATE, HANDLER_KEY extends string, HANDLERS extends Record<HANDLER_KEY, ReduxHandler<INNER_STATE>>> = {
-  [KEY in HANDLER_KEY]: ActionCreator<ExtractHandlerActionAttributes<INNER_STATE, HANDLERS[KEY]>>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [KEY in HANDLER_KEY]: ActionCreator<ExtractHandlerActionAttributes<INNER_STATE, HANDLERS[KEY]>, any>
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,11 +53,13 @@ export type ActionCreator<
   ATTRIBUTES = Record<string, unknown> | undefined,
   ADDITIONAL_ACTION_ATTRIBUTES = Record<string, unknown> | undefined,
 > = (
-  attributes: undefined extends ATTRIBUTES ? undefined : ATTRIBUTES,
+  // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+  attributes: ATTRIBUTES extends undefined ? void : ATTRIBUTES,
   actionAttributes?: ADDITIONAL_ACTION_ATTRIBUTES,
-) => HandlerAction<undefined extends ATTRIBUTES ? undefined : ATTRIBUTES> & ADDITIONAL_ACTION_ATTRIBUTES
+) => HandlerAction<ATTRIBUTES> & ADDITIONAL_ACTION_ATTRIBUTES
 
-export type ReduxHandler<STATE, ATTRIBUTES extends Record<string, unknown> = Record<string, unknown>> = (
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-redundant-type-constituents
+export type ReduxHandler<STATE, ATTRIBUTES extends Record<string, unknown> | any = any> = (
   state: STATE,
   attributes: ATTRIBUTES,
 ) => STATE
