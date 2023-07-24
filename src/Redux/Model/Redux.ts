@@ -168,8 +168,7 @@ export const combineRedux = (reduxMap: NodeReduxMap): {
 export const createRedux = <
   STATE,
   HANDLER_KEY extends string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  HANDLERS extends Record<HANDLER_KEY, ReduxHandler<STATE, any>>,
+  HANDLERS extends Record<HANDLER_KEY, ReduxHandler<STATE>>,
 >(attributes: Attributes<STATE, HANDLER_KEY, HANDLERS>): Redux<STATE, STATE, HANDLER_KEY, HANDLERS> => createReduxAdvanced<
   STATE,
   STATE,
