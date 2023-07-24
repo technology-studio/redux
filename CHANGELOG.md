@@ -1,3 +1,10 @@
+## [4.0.23](https://github.com/technology-studio/redux/compare/v4.0.22...v4.0.23) (2023-07-24)
+
+
+### Bug fixes
+
+* make attributes optional when undefined ([#291](https://github.com/technology-studio/redux/issues/291)) ([01ba2c2](https://github.com/technology-studio/redux/commit/01ba2c21ace6591cfb89581f4d404590815a2fa2))
+
 ## [4.0.22](https://github.com/technology-studio/redux/compare/v4.0.21...v4.0.22) (2023-07-24)
 
 
