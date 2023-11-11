@@ -37,7 +37,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@txo/functional": "^4.6.15",
+    "@txo/functional": "^4.6.16",
     "constant-case": "^3.0.4",
     "redux": "^4.2.1"
   },
