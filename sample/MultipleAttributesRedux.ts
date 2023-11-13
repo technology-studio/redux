@@ -7,10 +7,10 @@
 
 import update from 'immutability-helper'
 
-import type { ReduxHandler } from '../src'
+import type { ReduxHandler } from 'src'
 import {
   createRedux,
-} from '../src'
+} from 'src'
 
 type SetFirstAttributes = {
   first: Record<string, unknown>,

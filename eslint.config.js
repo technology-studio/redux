@@ -7,7 +7,14 @@ const config = [
     files: ['sample/**/*.ts'],
     languageOptions: {
       parserOptions: {
-        project: './__tests__/tsconfig.json',
+        project: './sample/tsconfig.json',
+      },
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: './sample/tsconfig.json',
+        },
       },
     },
   },
