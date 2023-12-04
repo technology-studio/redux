@@ -39,7 +39,7 @@
   "dependencies": {
     "@txo/functional": "^4.6.17",
     "constant-case": "^3.0.4",
-    "redux": "^4.2.1"
+    "redux": "^5.0.0"
   },
   "devDependencies": {
     "@txo-peer-dep/log": "^4.0.3",
