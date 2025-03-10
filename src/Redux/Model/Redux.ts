@@ -28,6 +28,7 @@ import { resettableReducer } from './ResettableRedux'
 // TODO: resolve why typescript throws error when using KEY generic
 const createTypes = (keys: (string | number | symbol)[], prefix: string): TypeMap<string | number | symbol> => {
   const result = keys.reduce<TypeMap<string | number | symbol>>((typeMap, key) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- comes from Object.keys - always a string
     typeMap[key] = prefix + constantCase(key as string)
     return typeMap
   }, {})
@@ -55,10 +56,12 @@ const createReducer = <
   }
 
   return (state: STATE | undefined, action: ACTION_BASE): STATE => {
+    // eslint-disable-next-line @typescript-eslint/init-declarations -- handler can be undefined
     let handler
-    if (action?.type != null && action.type !== '') {
-      const type: string = action.type
-      handler = handlerMap[type]
+    const { type } = action
+    if (type !== '') {
+      const { [type]: typeHandler } = handlerMap
+      handler = typeHandler
     }
     return wrapImmutable(
       immutable,
@@ -103,6 +106,7 @@ export const createReduxAdvanced = <
   ACTION_BASE extends HandlerAction<Record<string, unknown>>,
   HANDLER_KEY extends string,
   HANDLERS extends Record<HANDLER_KEY, ReduxHandler<INNER_STATE>>,
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- keep the type parameter to avoid breaking change
   ATTRIBUTES extends AttributesAdvanced<STATE, INNER_STATE, ACTION_BASE, HANDLER_KEY, HANDLERS>,
 > (attributes: ATTRIBUTES): Redux<STATE, INNER_STATE, HANDLER_KEY, HANDLERS> => {
   // const _attributes: AttributesAdvanced<STATE, INNER_STATE, ACTION_BASE> = {
@@ -111,6 +115,7 @@ export const createReduxAdvanced = <
   // }
   const immutable: Immutable = attributes.immutable ?? identity
   const handlers: HANDLERS = attributes.handlers
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Object.keys(handlers) can only be HANDLER_KEY[]
   const handlersKeys = Object.keys(handlers) as (HANDLER_KEY)[]
   const types: TypeMap<HANDLER_KEY> = createTypes(handlersKeys, attributes.prefix)
 
@@ -121,6 +126,7 @@ export const createReduxAdvanced = <
       attributes.initialState,
       handlersKeys.reduce<Record<string, ReduxHandler<INNER_STATE>>>(
         (handlerMap, handlerKey) => {
+          // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- we need to assign a value to handlerMap
           handlerMap[types[handlerKey]] = handlers[handlerKey]
           return handlerMap
         },
@@ -132,14 +138,14 @@ export const createReduxAdvanced = <
   )
 
   const creators = handlersKeys.reduce<Creators<INNER_STATE, HANDLER_KEY, HANDLERS>>((creatorList, handlerKey) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- actionAttributes are any
     creatorList[handlerKey] = (attributes, actionAttributes) => ({
       type: types[handlerKey],
       attributes,
       ...actionAttributes,
     })
     return creatorList
-  // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter, @typescript-eslint/consistent-type-assertions
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-unsafe-type-assertion -- we need to narrow the type because typescript infers as {}
   }, {} as Creators<INNER_STATE, HANDLER_KEY, HANDLERS>)
 
   return {
@@ -156,11 +162,13 @@ export const combineRedux = (reduxMap: NodeReduxMap): {
   reducer: Reducer, // TODO: fix Reducer<$ObjMap<typeof reduxMap, <S>(r: Reducer<S, any>) => S>, *>,
 } => ({
   filter: Object.keys(reduxMap).reduce<Record<string, FilterNode>>((filterMap, key) => {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- we need to assign a value to filterMap
     filterMap[key] = reduxMap[key].filter
     return filterMap
   }, {}),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- reducer action is any
   reducer: combineReducers(Object.keys(reduxMap).reduce<Record<string, Reducer<unknown, any>>>((reducerMap, key) => {
+    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- we need to assign a value to reducerMap
     reducerMap[key] = reduxMap[key].reducer
     return reducerMap
   }, {})),
