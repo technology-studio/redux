@@ -1,6 +1,4 @@
 [
-  "@typescript-eslint/prefer-destructuring",
-  "@typescript-eslint/no-magic-numbers",
   "eslint-comments/require-description",
   "@typescript-eslint/no-unnecessary-type-arguments",
   "@typescript-eslint/no-import-type-side-effects",
