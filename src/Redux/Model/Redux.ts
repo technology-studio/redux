@@ -126,7 +126,6 @@ export const createReduxAdvanced = <
       attributes.initialState,
       handlersKeys.reduce<Record<string, ReduxHandler<INNER_STATE>>>(
         (handlerMap, handlerKey) => {
-          // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- we need to assign a value to handlerMap
           handlerMap[types[handlerKey]] = handlers[handlerKey]
           return handlerMap
         },
@@ -162,13 +161,11 @@ export const combineRedux = (reduxMap: NodeReduxMap): {
   reducer: Reducer, // TODO: fix Reducer<$ObjMap<typeof reduxMap, <S>(r: Reducer<S, any>) => S>, *>,
 } => ({
   filter: Object.keys(reduxMap).reduce<Record<string, FilterNode>>((filterMap, key) => {
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- we need to assign a value to filterMap
     filterMap[key] = reduxMap[key].filter
     return filterMap
   }, {}),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- reducer action is any
   reducer: combineReducers(Object.keys(reduxMap).reduce<Record<string, Reducer<unknown, any>>>((reducerMap, key) => {
-    // eslint-disable-next-line @typescript-eslint/prefer-destructuring -- we need to assign a value to reducerMap
     reducerMap[key] = reduxMap[key].reducer
     return reducerMap
   }, {})),
