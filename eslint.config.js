@@ -4,11 +4,6 @@ module.exports = (async function config() {
     ...txoPackageConfigList.configList,
     {
       files: ['sample/**/*.ts'],
-      languageOptions: {
-        parserOptions: {
-          project: './sample/tsconfig.json',
-        },
-      },
       settings: {
         'import/resolver': {
           typescript: {

@@ -52,4 +52,5 @@ export const redux = createRedux<State, keyof Handlers<State>, Handlers<State>>(
 })
 
 export const type = redux.types.setFirst
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers -- sample attribute value
 redux.creators.setFirst({ first: { a: 1 } })
