@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@txo/functional": "^4.6.19",
-    "constant-case": "^3.0.4",
+    "constant-case": "^4.0.0",
     "redux": "^5.0.1"
   },
   "devDependencies": {
